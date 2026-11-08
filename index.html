@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Roshni · A Diwali Wish</title>
+<meta name="description" content="Light a river of diyas, unlock a sky full of fireworks, and send someone a Diwali wish. An interactive 3D experience with live-synthesised sound." />
+<meta name="theme-color" content="#07030f" />
+
+<meta property="og:title" content="Roshni · A Diwali Wish" />
+<meta property="og:description" content="Light the darkness, one diya at a time." />
+<meta property="og:type" content="website" />
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='13' r='6' fill='%23FFC21A'/><path d='M4 20h24a12 12 0 0 1-24 0z' fill='%23C2410C'/></svg>" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400&family=Inter:wght@400;500;600&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./styles/style.css" />
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<canvas id="stage" aria-label="Three-dimensional Diwali night scene" role="img"></canvas>
+
+<!-- ambient vignette + film grain, pure CSS, sits over the canvas -->
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<main id="ui" class="ui">
+
+  <!-- ░░ loading ░░ -->
+  <section id="loader" class="screen loader is-active">
+    <div class="loader__lamp" aria-hidden="true">
+      <span class="loader__flame"></span>
+    </div>
+    <p class="loader__label">lighting the first diya</p>
+  </section>
+
+  <!-- ░░ intro ░░ -->
+  <section id="intro" class="screen intro" hidden>
+    <p class="eyebrow">Shubh Deepawali · 2026</p>
+    <h1 class="title">
+      <span class="title__deva">रोशनी</span>
+      <span class="title__latin">Roshni</span>
+    </h1>
+    <p class="lede">
+      A river gone dark, and a hundred and eight diyas waiting.
+      Light one &mdash; the flame will find the next.
+    </p>
+    <div class="intro__who">
+      <label for="to">Who is this wish for?</label>
+      <input id="to" type="text" maxlength="22" placeholder="Aai, Papa, Riya…" autocomplete="off" spellcheck="false" />
+    </div>
+    <button id="begin" class="btn btn--primary">Begin at the ghat</button>
+    <p class="fineprint">Sound is part of it. Headphones, if you have them.</p>
+  </section>
+
+  <!-- ░░ heads-up display ░░ -->
+  <section id="hud" class="hud" hidden>
+    <div class="hud__top">
+      <div class="counter" aria-live="polite">
+        <svg class="counter__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2c.6 3.2-1.8 4.1-1.8 6.2a1.8 1.8 0 0 0 3.6 0C13.8 6.1 11.4 5.2 12 2z" />
+          <path d="M2.5 12.5h19c0 4.7-4.3 8.5-9.5 8.5s-9.5-3.8-9.5-8.5z" />
+        </svg>
+        <span><b id="lit-count">0</b><i>/</i><span id="lit-total">108</span> diyas</span>
+      </div>
+      <button id="mute" class="icon-btn" aria-pressed="false" title="Mute sound (M)">
+        <span class="icon-btn__on" aria-hidden="true">♪</span>
+        <span class="sr">Toggle sound</span>
+      </button>
+    </div>
+
+    <div class="hud__bar" aria-hidden="true"><span id="hud-fill"></span></div>
+
+    <p id="hint" class="hint"></p>
+
+    <div class="hud__bottom">
+      <button id="spread" class="btn btn--ghost" hidden>Let the light run</button>
+      <button id="finale" class="btn btn--primary" hidden>Write it in the sky</button>
+    </div>
+  </section>
+
+  <!-- ░░ wish card ░░ -->
+  <section id="card" class="screen card" hidden>
+    <div class="card__inner">
+      <div class="card__foil" aria-hidden="true"></div>
+      <p class="card__to">for <b id="card-to">you</b></p>
+      <h2 class="card__head">Shubh<br />Deepawali</h2>
+      <p class="card__body" id="card-body">
+        May your year be lit the way this river is &mdash; not by one great fire,
+        but by a hundred small lights that kept passing it on.
+      </p>
+      <div class="card__sign">
+        <label for="from" class="sr">Your name</label>
+        <input id="from" type="text" maxlength="22" placeholder="— from you" autocomplete="off" />
+      </div>
+      <div class="card__actions">
+        <button id="share" class="btn btn--primary">Copy wish link</button>
+        <button id="again" class="btn btn--ghost">Stay and watch</button>
+      </div>
+      <p id="share-note" class="card__note" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <footer class="credit">
+    <span>Built by <a href="https://github.com/Dhairya-007" target="_blank" rel="noopener">Dhairya Oza</a></span>
+    <span class="credit__dot">·</span>
+    <span>three.js &amp; Web Audio, no assets</span>
+  </footer>
+</main>
+
+<noscript>
+  <div class="noscript">
+    <h1>रोशनी</h1>
+    <p>This Diwali wish is drawn live with WebGL. Please enable JavaScript to light it.</p>
+  </div>
+</noscript>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
